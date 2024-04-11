@@ -19,6 +19,7 @@ bazel_dep(name = "rules_jvm_external", version = "6.0")
 bazel_dep(name = "rules_license", version = "0.0.7")
 bazel_dep(name = "rules_pkg", version = "0.10.1")
 bazel_dep(name = "rules_proto", version = "6.0.0-rc2")
+bazel_dep(name = "contrib_rules_jvm", version = "0.24.0")
 
 # TODO: remove this after https://github.com/bazelbuild/remote-apis/pull/293 is merged
 bazel_dep(name = "remoteapis", version = "eb433accc6a666b782ea4b787eb598e5c3d27c93")

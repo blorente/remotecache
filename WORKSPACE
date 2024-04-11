@@ -1,3 +1,6 @@
+#load("@contrib_rules_jvm//:gazelle_setup.bzl", "contrib_rules_jvm_gazelle_setup")
+#
+#contrib_rules_jvm_gazelle_setup()
 #workspace(name = "remotecache")
 #
 #load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
