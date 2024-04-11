@@ -2,6 +2,13 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "remotecache",
-    srcs = ["RemoteCache.java"],
+    srcs = [
+        "RemoteCache.java",
+        "ACImpl.java",
+        "CASImpl.java",
+    ],
     visibility = ["//:__subpackages__"],
+    deps = [
+        "@remote_apis//build/bazel/remote/execution/v2:remote_execution_java_proto",
+    ],
 )
