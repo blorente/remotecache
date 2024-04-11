@@ -10,11 +10,16 @@ java_library(
     ],
     visibility = ["//:__subpackages__"],
     deps = [
-        "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
-        ":build_bazel_remote_execution_v2_remote_execution_java_grpc",
-    ],  # keep
+        ":build_bazel_remote_execution_v2_remote_execution_java_grpc",  # keep
+        "@maven//:io_grpc_grpc_api",
+        "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",  # keep
+    ],
+    runtime_deps = [
+        "@maven//:io_grpc_grpc_netty_shaded",
+    ], # keep
 )
 
+# @remoteapis doesn't generate the gRPC stubs by default, so we force-generate them here.
 java_grpc_library(
     name = "build_bazel_remote_execution_v2_remote_execution_java_grpc",
     srcs = ["@remoteapis//build/bazel/remote/execution/v2:remote_execution_proto"],
@@ -22,7 +27,6 @@ java_grpc_library(
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
     ],
 )
-
 
 java_binary(
     name = "RemoteCache",

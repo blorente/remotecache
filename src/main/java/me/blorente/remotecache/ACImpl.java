@@ -1,4 +1,6 @@
 package me.blorente.remotecache;
 
-public class ACImpl extends Remote.ContentAddressableStorage {
+import build.bazel.remote.execution.v2.ActionCacheGrpc;
+
+public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
 }
