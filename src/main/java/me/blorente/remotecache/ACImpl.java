@@ -1,4 +1,4 @@
 package me.blorente.remotecache;
 
-public class ACImpl extends RemoteExecutionProto.ContentAddressableStorage {
+public class ACImpl extends Remote.ContentAddressableStorage {
 }

@@ -1,14 +1,21 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
 
 java_library(
     name = "remotecache",
     srcs = [
-        "RemoteCache.java",
         "ACImpl.java",
         "CASImpl.java",
+        "RemoteCache.java",
     ],
     visibility = ["//:__subpackages__"],
     deps = [
         "@remote_apis//build/bazel/remote/execution/v2:remote_execution_java_proto",
-    ],
+    ],  # keep
+)
+
+java_binary(
+    name = "RemoteCache",
+    main_class = "me.blorente.remotecache.RemoteCache",
+    visibility = ["//visibility:public"],
+    runtime_deps = [":remotecache"],
 )

@@ -1,7 +1,6 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
-load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 
-# gazelle:prefix github.com/your/project
 gazelle(
     name = "gazelle",
     gazelle = ":gazelle_bin",

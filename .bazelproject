@@ -1,0 +1,6 @@
+directories:
+  .
+
+derive_targets_from_directories: true
+
+gazelle_target: //:gazelle
