@@ -17,6 +17,7 @@ public class RemoteCache {
       server = ServerBuilder.forPort(port)
           .addService(new CASImpl())
           .addService(new ACImpl())
+          .addService(new CapabilitiesImpl())
           .build()
           .start();
       logger.info("Server started, listening on " + port);

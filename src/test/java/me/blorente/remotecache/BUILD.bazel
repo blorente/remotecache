@@ -1,0 +1,10 @@
+load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite")
+
+java_test_suite(
+    name = "remotecache",
+    srcs = ["ExampleTest.java"],
+    deps = [
+        "//src/main/java/me/blorente/remotecache",
+        "@maven//:junit_junit",
+    ],
+)
