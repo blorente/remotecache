@@ -9,7 +9,7 @@ java_library(
     ],
     visibility = ["//:__subpackages__"],
     deps = [
-        "@remote_apis//build/bazel/remote/execution/v2:remote_execution_java_proto",
+        "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
     ],  # keep
 )
 

@@ -1,4 +1,100 @@
+
+module(
+    name = "buildcache",
+    repo_name = "buildcache",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.5.0")
+bazel_dep(name = "blake3", version = "1.3.3.bcr.1")
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0")
-# Needed for protobuf
+bazel_dep(name = "gazelle", version = "0.35.0", repo_name = "bazel_gazelle")
+bazel_dep(name = "grpc-java", version = "1.62.2")
+bazel_dep(name = "googleapis", version = "0.0.0-20240326-1c8d509c5", repo_name = "com_google_googleapis")
+bazel_dep(name = "platforms", version = "0.0.8")
+bazel_dep(name = "protobuf", version = "23.1", repo_name = "com_google_protobuf")
+bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "rules_go", version = "0.46.0", repo_name = "io_bazel_rules_go")
+bazel_dep(name = "rules_java", version = "7.4.0")
+bazel_dep(name = "rules_jvm_external", version = "6.0")
+bazel_dep(name = "rules_license", version = "0.0.7")
 bazel_dep(name = "rules_pkg", version = "0.10.1")
-bazel_dep(name = "zlib", version = "1.3.1")
+bazel_dep(name = "rules_proto", version = "6.0.0-rc2")
+
+# TODO: remove this after https://github.com/bazelbuild/remote-apis/pull/293 is merged
+bazel_dep(name = "remoteapis", version = "eb433accc6a666b782ea4b787eb598e5c3d27c93")
+archive_override(
+    module_name = "remoteapis",
+    integrity = "sha256-68wzxNAkPZ49/zFwPYQ5z9MYbgxoeIEazKJ24+4YqIQ=",
+    strip_prefix = "remote-apis-eb433accc6a666b782ea4b787eb598e5c3d27c93",
+    urls = [
+        "https://github.com/bazelbuild/remote-apis/archive/eb433accc6a666b782ea4b787eb598e5c3d27c93.zip",
+    ],
+)
+
+IO_GRPC_MODULES = [
+    "api",
+    "auth",
+    "core",
+    "context",
+    "netty",
+    "stub",
+    "protobuf",
+    "testing",
+    "services",
+    "netty-shaded",
+]
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.code.gson:gson:2.10.1",
+                    "com.google.errorprone:error_prone_annotations:2.22.0",
+                    "com.google.errorprone:error_prone_core:2.22.0",
+                    "com.google.guava:failureaccess:1.0.1",
+                    "com.google.guava:guava:32.1.1-jre",
+                    "com.google.j2objc:j2objc-annotations:2.8",
+                    "com.google.jimfs:jimfs:1.3.0",
+                    "com.google.protobuf:protobuf-java-util:3.19.1",
+                    "com.google.protobuf:protobuf-java:3.19.1",
+                    "com.google.truth:truth:1.1.5",
+                    "com.googlecode.json-simple:json-simple:1.1.1",
+                    "com.jayway.jsonpath:json-path:2.8.0",
+                    "net.jcip:jcip-annotations:1.0",
+                    "org.bouncycastle:bcprov-jdk15on:1.70",
+                    "org.slf4j:slf4j-simple:2.0.9",
+                    ] +
+                ["io.grpc:grpc-%s:1.62.2" % module for module in IO_GRPC_MODULES] + [
+        "javax.annotation:javax.annotation-api:1.3.2",
+        "junit:junit:4.13.2",
+    ],
+    fail_if_repin_required = True,  # TO RE-PIN: REPIN=1 bazel run @unpinned_maven//:pin
+    generate_compat_repositories = True,
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2",
+    ],
+    strict_visibility = False,  # True breaks aws jars
+)
+use_repo(
+    maven,
+    "maven",
+    "unpinned_maven",
+)
+
+build_deps = use_extension("//:extensions.bzl", "build_deps")
+use_repo(
+    build_deps,
+    "bazel",
+    "io_grpc_grpc_proto",
+    "opentelemetry",
+    "skip_sleep",
+    "tini",
+)
+
+googleapis_switched_rules = use_extension("@com_google_googleapis//:extensions.bzl", "switched_rules")
+googleapis_switched_rules.use_languages(
+    grpc = True,
+    java = True,
+)
+use_repo(googleapis_switched_rules, "com_google_googleapis_imports")
