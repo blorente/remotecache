@@ -4,6 +4,9 @@ A simple, probably incomplete implementation of a remote cache.
 
 ## Quick Start
 
+### Prerequisites
+- [Bazel](https://bazel.build/install).
+
 ```shell
 # Start the server
 bazel run //src/main/java/me/blorente/remotecache:RemoteCache -- -p 50051

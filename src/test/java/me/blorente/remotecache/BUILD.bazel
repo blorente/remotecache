@@ -7,14 +7,22 @@ java_test_suite(
         "CacheStorageTests.java",
         "ExampleTest.java",
     ],
-    test_suffixes = ["Test.java", "Tests.java"],
     runner = "junit5",
+    test_suffixes = [
+        "Test.java",
+        "Tests.java",
+    ],
+    runtime_deps = [
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_junit_platform_junit_platform_launcher",
+        "@maven//:org_junit_platform_junit_platform_reporting",
+        "@maven//:org_junit_vintage_junit_vintage_engine",
+    ],
     deps = [
         "//src/main/java/me/blorente/remotecache",
         "@maven//:com_google_protobuf_protobuf_java",
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
         artifact("com.google.guava:guava"),
         artifact("org.junit.jupiter:junit-jupiter-api"),
-        "@maven//:com_google_guava_guava",
-    ] + JUNIT5_DEPS, # keep
+    ] + JUNIT5_DEPS,  # keep
 )
