@@ -16,7 +16,6 @@
   If I had to handle it, I'd generate signed JWTs and pass them as bearer tokens in the gRPC headers.
 - FindMissingBlobs operations are batched, we don't stream responses. We should.
 - We expect at most one client at a time. We do not handle concurrent connections correctly.
-- There is no consideration for configuration, everything is hardcoded constants.
 
 - `CacheStorage`:
   - We store all blobs in memory. In practice build caches should be optimized for `findMissingBlobs` latency, and this yields the fastest lookups.
@@ -25,6 +24,8 @@
     - We intentionally don't support resuming uploads, so we don't set `committedSize` on responses. If a write fails, it must be re-started.
   - `write()`:
     - We concatenate directly onto a `ByteString` every time we read a partial blob. There's probably a buffered implementation, but I haven't bothered for this exercise.
+- `CASImpl`:
+  - `getTree()`: Left unimplemented, didn't seem to affect the ability to operate.
 - `CapabilitiesImpl`:
   - We don't accept any compression, for ease of implementation.
   - We only accept SHA256 as a digest function, again for ease of implementation.
