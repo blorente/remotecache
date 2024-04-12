@@ -1,7 +1,7 @@
 package me.blorente.remotecache;
 
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
+import io.grpc.*;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -15,6 +15,7 @@ public class RemoteCache {
     private void start() throws IOException {
       int port = 50051;
       server = ServerBuilder.forPort(port)
+              .intercept(new GrpcRequestPrinter())
           .addService(new CASImpl())
           .addService(new ACImpl())
           .addService(new CapabilitiesImpl())
@@ -53,5 +54,15 @@ public class RemoteCache {
         final RemoteCache server = new RemoteCache();
         server.start();
         server.blockUntilShutdown();
+    }
+
+    private class GrpcRequestPrinter implements ServerInterceptor {
+        private static final Logger logger = Logger.getLogger(GrpcRequestPrinter.class.getName());
+
+        @Override
+        public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
+            logger.info(String.format("BL: grpc call method=%s headers=%s", call.getMethodDescriptor().getFullMethodName(), headers));
+            return next.startCall(call, headers);
+        }
     }
 }
