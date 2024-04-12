@@ -61,7 +61,7 @@ public class RemoteCache {
 
         @Override
         public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-            logger.info(String.format("BL: grpc call method=%s headers=%s", call.getMethodDescriptor().getFullMethodName(), headers));
+//            logger.info(String.format("BL: grpc call method=%s headers=%s", call.getMethodDescriptor().getFullMethodName(), headers));
             return next.startCall(call, headers);
         }
     }

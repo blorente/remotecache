@@ -1,0 +1,10 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "tools_remote",
+    integrity = "sha256-mF8Za0p6GyAkyERg65PiFiJCRaxq3THqTfpgyTyTi3o=",
+    strip_prefix = "tools_remote-8ac4b7595baa239e1eee4785547c5dcb7587e11c",
+    urls = [
+        "https://github.com/bazelbuild/tools_remote/archive/8ac4b7595baa239e1eee4785547c5dcb7587e11c.zip",
+    ],
+)

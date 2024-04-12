@@ -4,3 +4,4 @@ common:testcache --remote_cache=grpc://localhost:50051
 common:testcache --remote_cache_header=HELLO=world
 common:testcache --repository_cache=
 common:testcache --disk_cache=
+common:testcache --remote_grpc_log=__bl/grpc.log

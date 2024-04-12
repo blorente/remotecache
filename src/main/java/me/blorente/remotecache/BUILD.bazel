@@ -15,6 +15,7 @@ java_library(
     ],  # keep
     deps = [
         ":build_bazel_remote_execution_v2_remote_execution_java_grpc",
+        "@com_google_protobuf//java/core",
         "@grpc-java//stub",
         "@maven//:io_grpc_grpc_api",
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
