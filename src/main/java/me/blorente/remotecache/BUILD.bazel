@@ -15,7 +15,7 @@ java_library(
     visibility = ["//:__subpackages__"],
     exports = ["@maven//:com_google_protobuf_protobuf_java"],
     runtime_deps = [
-        "@maven//:io_grpc_grpc_netty_shaded",
+        artifact("io.grpc:grpc-netty-shaded"),
     ],  # keep
     deps = [
         "//:build_bazel_remote_execution_v2_remote_execution_java_grpc",

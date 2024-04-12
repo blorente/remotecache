@@ -11,7 +11,6 @@ public class CapabilitiesImpl extends CapabilitiesGrpc.CapabilitiesImplBase {
 
     @Override
     public void getCapabilities(GetCapabilitiesRequest request, StreamObserver<ServerCapabilities> responseObserver) {
-        logger.info(String.format("BL: got getCapabilities request %s", request));
         CacheCapabilities cacheCapabilities = CacheCapabilities.newBuilder()
 
                 .addDigestFunctions(DigestFunction.Value.SHA256)
@@ -31,7 +30,7 @@ public class CapabilitiesImpl extends CapabilitiesGrpc.CapabilitiesImplBase {
                         .setHighApiVersion(supportedVersion)
                         .setCacheCapabilities(cacheCapabilities)
                         .build();
-        logger.info(String.format("BL: Server capabilities: %s", capabilities));
+        logger.info(String.format("Server capabilities: %s", capabilities));
         responseObserver.onNext(
                 capabilities
         );

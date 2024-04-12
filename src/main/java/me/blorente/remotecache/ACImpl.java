@@ -39,7 +39,6 @@ public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
   @Override
   public void updateActionResult(
       UpdateActionResultRequest request, StreamObserver<ActionResult> responseObserver) {
-    logger.info(String.format("BL: I got getActionResult request %s", request));
     Digest digest = request.getActionDigest();
     ActionResult result = request.getActionResult();
     storage.writeAction(digest, result);

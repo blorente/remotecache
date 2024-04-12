@@ -53,9 +53,6 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
 
       @Override
       public void onNext(ByteStreamProto.WriteRequest request) {
-        logger.info(
-            String.format("BL: I got ByteStream.write request %s", request.getResourceName()));
-
         Digest digest = currentDigest;
         String resourceName = request.getResourceName();
         if (!resourceName.isEmpty()) {
@@ -136,7 +133,6 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
   }
 
   private DigestParseResult parseDigestFromResourceName(String resourceName) {
-    logger.info(String.format("BL: parseDigestFromResourceName resourceName %s", resourceName));
     String[] resourceNameParts = resourceName.split("/blobs/");
     if (resourceNameParts.length != 2) {
       return new DigestParseResult(

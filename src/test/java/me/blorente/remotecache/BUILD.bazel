@@ -5,7 +5,6 @@ java_test_suite(
     name = "remotecache",
     srcs = [
         "CacheStorageTests.java",
-        "ExampleTest.java",
     ],
     runner = "junit5",
     test_suffixes = [
@@ -16,7 +15,6 @@ java_test_suite(
         "@maven//:org_junit_jupiter_junit_jupiter_engine",
         "@maven//:org_junit_platform_junit_platform_launcher",
         "@maven//:org_junit_platform_junit_platform_reporting",
-        "@maven//:org_junit_vintage_junit_vintage_engine",
     ],
     deps = [
         "//src/main/java/me/blorente/remotecache",

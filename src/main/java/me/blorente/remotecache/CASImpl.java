@@ -26,7 +26,6 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
   @Override
   public void findMissingBlobs(
       FindMissingBlobsRequest request, StreamObserver<FindMissingBlobsResponse> responseObserver) {
-    logger.info(String.format("BL: I got findMissingBlobs request %s", request));
     List<Digest> digests = request.getBlobDigestsList();
     FindMissingBlobsResponse.Builder response = FindMissingBlobsResponse.newBuilder();
     for (Digest digest : digests) {
@@ -34,7 +33,6 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
         response.addMissingBlobDigests(digest);
       }
     }
-    logger.info(String.format("BL: Not found blobs are %s", response.getMissingBlobDigestsList()));
     responseObserver.onNext(response.build());
     responseObserver.onCompleted();
   }
@@ -42,7 +40,6 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
   @Override
   public void batchUpdateBlobs(
       BatchUpdateBlobsRequest request, StreamObserver<BatchUpdateBlobsResponse> responseObserver) {
-    logger.info(String.format("BL: I got batchUpdateBlobs request %s", request));
     List<BatchUpdateBlobsRequest.Request> updateRequests = request.getRequestsList();
     for (BatchUpdateBlobsRequest.Request req : updateRequests) {
       Digest digest = req.getDigest();
@@ -55,7 +52,6 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
   @Override
   public void batchReadBlobs(
       BatchReadBlobsRequest request, StreamObserver<BatchReadBlobsResponse> responseObserver) {
-    logger.info(String.format("BL: I got batchReadBlobs request %s", request));
     BatchReadBlobsResponse.Builder responseBuilder = BatchReadBlobsResponse.newBuilder();
     for (Digest digest : request.getDigestsList()) {
       ByteString data = storage.getBlob(digest);
