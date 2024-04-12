@@ -11,12 +11,12 @@ A simple, probably incomplete implementation of a remote cache.
 # Start the server
 bazel run //src/main/java/me/blorente/remotecache:RemoteCache -- -p 50051
 # Run the tests against it
-bazel test --remote_cache=localhost:50051 //... 
+bazel test --remote_cache=grpc://localhost:50051 //... 
 # Build the entire project with it
-bazel build --remote_cache=localhost:50051 //:RemoteCache 
+bazel build --remote_cache=grpc://localhost:50051 //:RemoteCache 
 ```
 
-In general, adding the `--remote_cache=localhost:<port>` to your Bazel build should be enough to use the remote cache.
+In general, adding the `--remote_cache=grpc://localhost:<port>` to your Bazel build should be enough to use the remote cache.
 
 ## Contributing
 

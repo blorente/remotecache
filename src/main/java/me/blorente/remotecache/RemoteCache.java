@@ -29,26 +29,10 @@ public class RemoteCache implements Callable<Integer> {
       description = "Capacity for the Action Cache in number of blobs")
   private int maxActions = 10000;
 
-  @CommandLine.Option(
-      names = {"--debug-grpc"},
-      description = "Print every gRPC request received")
-  private boolean debugGrpc = false;
-
   private Server server;
 
   private void start() throws IOException {
     CacheStorage storage = new CacheStorage(maxBlobs, maxActions);
-//    ServerBuilder<?> serverBuilder = ServerBuilder.forPort(this.port);
-//    if (debugGrpc) {
-//      serverBuilder = serverBuilder.intercept(new GrpcDebugInterceptor());
-//    }
-//    serverBuilder =
-//        serverBuilder
-//            .addService(new CASImpl(storage))
-//            .addService(new ACImpl(storage))
-//            .addService(new ByteStreamImpl(storage))
-//            .addService(new CapabilitiesImpl());
-//    server = serverBuilder.build().start();
   server = ServerBuilder.forPort(this.port)
             .addService(new CASImpl(storage))
             .addService(new ACImpl(storage))
@@ -95,16 +79,5 @@ public class RemoteCache implements Callable<Integer> {
   public static void main(String[] args) throws IOException, InterruptedException {
     int exitCode = new CommandLine(new RemoteCache()).execute(args);
     System.exit(exitCode);
-  }
-
-  private static class GrpcDebugInterceptor implements ServerInterceptor {
-    private static final Logger logger = Logger.getLogger(GrpcDebugInterceptor.class.getName());
-
-    @Override
-    public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
-        ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-      logger.info(String.format("got gRPC request %s", call.getMethodDescriptor().getFullMethodName()));
-      return next.startCall(call, headers);
-    }
   }
 }
