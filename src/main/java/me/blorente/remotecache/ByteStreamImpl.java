@@ -71,7 +71,6 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
         String hash = digestParts[0];
         long size = Long.parseLong(digestParts[1]);
         Digest ret = Digest.newBuilder().setHash(hash).setSizeBytes(size).build();
-        logger.info(String.format("BL: Parsed resource %s into digest %s", resourceName, ret));
         return ret;
     }
 }

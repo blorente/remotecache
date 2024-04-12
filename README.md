@@ -1,7 +1,8 @@
 # Remotecache
 
 ## TODO
-- [ ] Tests
+- Tests
+- Cache eviction
 - AC cache hits should ensure that the CAS items are fresh: https://github.com/bazelbuild/remote-apis/blob/1f36c310b28d762b258ea577ed08e8203274efae/build/bazel/remote/execution/v2/remote_execution.proto#L160
 - AC update error returns: https://github.com/bazelbuild/remote-apis/blob/1f36c310b28d762b258ea577ed08e8203274efae/build/bazel/remote/execution/v2/remote_execution.proto#L188
 - Handle other digest functions?

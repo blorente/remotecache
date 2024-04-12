@@ -4,13 +4,14 @@ java_library(
     name = "remotecache",
     srcs = [
         "ACImpl.java",
+        "ByteStreamImpl.java",
         "CASImpl.java",
+        "CacheStorage.java",
         "CapabilitiesImpl.java",
         "RemoteCache.java",
-        "ByteStreamImpl.java",
-        "CacheStorage.java",
     ],
     visibility = ["//:__subpackages__"],
+    exports = ["@maven//:com_google_protobuf_protobuf_java"],
     runtime_deps = [
         "@maven//:io_grpc_grpc_netty_shaded",
     ],  # keep
