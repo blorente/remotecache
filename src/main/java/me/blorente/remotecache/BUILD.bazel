@@ -22,6 +22,7 @@ java_library(
         "@com_google_protobuf//java/core",
         "@grpc-java//stub",
         "@maven//:io_grpc_grpc_api",
+        "@maven//:org_jetbrains_annotations",
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
         "@remoteapis//build/bazel/semver:semver_java_proto",
     ],  # keep

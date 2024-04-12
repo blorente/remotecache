@@ -8,16 +8,10 @@ import build.bazel.remote.execution.v2.BatchReadBlobsRequest;
 import build.bazel.remote.execution.v2.BatchUpdateBlobsRequest;
 import build.bazel.remote.execution.v2.BatchReadBlobsResponse;
 import build.bazel.remote.execution.v2.BatchUpdateBlobsResponse;
-import build.bazel.remote.execution.v2.GetTreeRequest;
-import build.bazel.remote.execution.v2.GetTreeResponse;
-import com.google.bytestream.ByteStreamGrpc;
-import com.google.bytestream.ByteStreamProto;
 import io.grpc.stub.StreamObserver;
 import com.google.protobuf.ByteString;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
 public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableStorageImplBase {
@@ -33,7 +27,6 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
   public void findMissingBlobs(
       FindMissingBlobsRequest request, StreamObserver<FindMissingBlobsResponse> responseObserver) {
     logger.info(String.format("BL: I got findMissingBlobs request %s", request));
-    logger.info(String.format("BL: Blobs are %s", storage.cas()));
     List<Digest> digests = request.getBlobDigestsList();
     FindMissingBlobsResponse.Builder response = FindMissingBlobsResponse.newBuilder();
     for (Digest digest : digests) {

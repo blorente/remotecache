@@ -45,6 +45,7 @@ IO_GRPC_MODULES = [
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
     artifacts = [
+                    "org.jetbrains:annotations:24.0.0",
                 ] +
                 ["io.grpc:grpc-%s:1.62.2" % module for module in IO_GRPC_MODULES] + [
         "javax.annotation:javax.annotation-api:1.3.2",

@@ -16,3 +16,11 @@
 - FindMissingBlobs operations are batched, we don't stream responses. We should.
 - We do not support compressed data.
 - We expect at most one client at a time. We do not handle concurrent connections correctly.
+- There is no consideration for configuration, everything is hardcoded constants.
+- `CacheStorage`:
+  - We store all blobs in memory. In practice build caches should be optimized for `findMissingBlobs` latency, and this yields the fastest lookups.
+- `ByteStreamImpl`:
+  - `queryWriteStatus`:
+    - We intentionally don't support resuming uploads, so we don't set `committedSize` on responses. If a write fails, it must be re-started.
+- `CapabilitiesImpl`:
+  - We don't accept any compression, for ease of implementation.
