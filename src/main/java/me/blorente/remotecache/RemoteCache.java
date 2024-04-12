@@ -14,11 +14,15 @@ public class RemoteCache implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-p", "--port"}, description = "Port to serve traffic on")
     private int port = 5001;
+    @CommandLine.Option(names = {"--max-blobs"}, description = "Capacity for the CAS in number of blobs")
+    private int maxBlobs = 10000;
+    @CommandLine.Option(names = {"--max-actions"}, description = "Capacity for the Action Cache in number of blobs")
+    private int maxActions = 10000;
 
     private Server server;
 
     private void start() throws IOException {
-      CacheStorage storage = new CacheStorage();
+      CacheStorage storage = new CacheStorage(maxBlobs, maxActions);
     server =
         ServerBuilder.forPort(this.port)
             .addService(new CASImpl(storage))

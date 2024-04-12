@@ -13,5 +13,6 @@ java_test_suite(
         "@maven//:com_google_protobuf_protobuf_java",
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:com_google_guava_guava",
     ] + JUNIT5_DEPS,
 )

@@ -5,6 +5,7 @@ java_library(
     srcs = [
         "ACImpl.java",
         "ByteStreamImpl.java",
+        "LRUCache.java",
         "CASImpl.java",
         "CacheStorage.java",
         "CapabilitiesImpl.java",

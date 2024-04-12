@@ -25,11 +25,9 @@ public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
     Digest digest = request.getActionDigest();
     if (storage.hasAction(digest)) {
       ActionResult res = storage.getAction(digest);
-      logger.info(String.format("BL: Action found %s", digest));
       responseObserver.onNext(res);
       responseObserver.onCompleted();
     } else {
-      logger.info("BL: Action Not Found. Answering with NOT_FOUND");
       responseObserver.onError(
           Status.Code.NOT_FOUND
               .toStatus()
