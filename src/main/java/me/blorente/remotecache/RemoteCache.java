@@ -14,13 +14,16 @@ public class RemoteCache {
 
     private void start() throws IOException {
       int port = 50051;
-      server = ServerBuilder.forPort(port)
-              .intercept(new GrpcRequestPrinter())
-          .addService(new CASImpl())
-          .addService(new ACImpl())
-          .addService(new CapabilitiesImpl())
-          .build()
-          .start();
+      CacheStorage storage = new CacheStorage();
+    server =
+        ServerBuilder.forPort(port)
+            .intercept(new GrpcRequestPrinter())
+            .addService(new CASImpl(storage))
+            .addService(new ACImpl(storage))
+            .addService(new ByteStreamImpl(storage))
+            .addService(new CapabilitiesImpl())
+            .build()
+            .start();
       logger.info("Server started, listening on " + port);
       Runtime.getRuntime().addShutdownHook(new Thread() {
         @Override

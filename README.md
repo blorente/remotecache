@@ -6,6 +6,7 @@
 - AC update error returns: https://github.com/bazelbuild/remote-apis/blob/1f36c310b28d762b258ea577ed08e8203274efae/build/bazel/remote/execution/v2/remote_execution.proto#L188
 - Handle other digest functions?
 - CAS lifetime increases on findmissingblobs
+- Ensure the commit to remoteapis is upstream and I can access it, or fork and push
 
 ## Design Decisions
 

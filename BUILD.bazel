@@ -1,5 +1,6 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+load("@grpc-java//:java_grpc_library.bzl", "java_grpc_library")
 
 # gazelle:prefix blorente.me/remotecache
 # gazelle:java_maven_install_file maven_install.json
@@ -23,13 +24,22 @@ buildifier(
     lint_mode = "warn",
 )
 
-# Adapted from https://github.com/bazelbuild/tools_remote/blob/8ac4b7595baa239e1eee4785547c5dcb7587e11c/BUILD#L1
-# We can't use that binary because `tools_remote` doesn't play well with bzlmod.
-java_binary(
-    name = "remote_client",
-    main_class = "com.google.devtools.build.remote.client.RemoteClient",
+## Adapted from https://github.com/bazelbuild/tools_remote/blob/8ac4b7595baa239e1eee4785547c5dcb7587e11c/BUILD#L1
+## We can't use that binary because `tools_remote` doesn't play well with bzlmod.
+#java_binary(
+#    name = "remote_client",
+#    main_class = "com.google.devtools.build.remote.client.RemoteClient",
+#    deps = [
+#        "@tools_remote//src/main/java/com/google/devtools/build/remote/client",
+#    ],
+#)
+#
+# @remoteapis doesn't generate the gRPC stubs by default, so we force-generate them here.
+java_grpc_library(
+    name = "build_bazel_remote_execution_v2_remote_execution_java_grpc",
+    srcs = ["@remoteapis//build/bazel/remote/execution/v2:remote_execution_proto"],
+    visibility = ["//src:__subpackages__"],
     deps = [
-        "@tools_remote//src/main/java/com/google/devtools/build/remote/client",
-        "@io_grpc_grpc_java//api",
+        "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
     ],
 )

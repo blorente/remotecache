@@ -15,15 +15,19 @@ import java.util.logging.Logger;
 public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
   private static final Logger logger = Logger.getLogger(ACImpl.class.getName());
 
-  private final ConcurrentMap<Digest, ActionResult> blobs = new ConcurrentHashMap<>();
+  private final CacheStorage storage;
+
+  public ACImpl(CacheStorage storage) {
+    this.storage = storage;
+  }
 
   @Override
   public void getActionResult(
       GetActionResultRequest request, StreamObserver<ActionResult> responseObserver) {
     logger.info(String.format("BL: I got getActionResult request %s", request));
     Digest digest = request.getActionDigest();
-    if (blobs.containsKey(digest)) {
-      ActionResult res = blobs.get(digest);
+    if (storage.ac().containsKey(digest)) {
+      ActionResult res = storage.ac().get(digest);
       logger.info(String.format("BL: Action found %s", res));
       responseObserver.onNext(res);
       responseObserver.onCompleted();
@@ -43,8 +47,8 @@ public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
     logger.info(String.format("BL: I got getActionResult request %s", request));
     Digest digest = request.getActionDigest();
     ActionResult result = request.getActionResult();
-    blobs.put(digest, result);
+    storage.ac().put(digest, result);
     responseObserver.onNext(result);
-    super.updateActionResult(request, responseObserver);
+    responseObserver.onCompleted();
   }
 }
