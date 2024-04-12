@@ -32,3 +32,8 @@ java_grpc_library(
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
     ],
 )
+
+filegroup(
+    name = "RemoteCache",
+    srcs = ["//src/main/java/me/blorente/remotecache:RemoteCache_deploy.jar"],
+)

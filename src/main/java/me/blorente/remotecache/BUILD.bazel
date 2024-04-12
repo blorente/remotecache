@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_jvm_external//:defs.bzl", "artifact")
 
 java_library(
     name = "remotecache",
@@ -18,13 +19,13 @@ java_library(
     ],  # keep
     deps = [
         "//:build_bazel_remote_execution_v2_remote_execution_java_grpc",
+        artifact("info.picocli:picocli"),
+        artifact("io.grpc:grpc-api"),
+        artifact("org.jetbrains:annotations"),
         "@com_google_googleapis//google/bytestream:bytestream_java_grpc",
         "@com_google_googleapis//google/bytestream:bytestream_java_proto",
         "@com_google_protobuf//java/core",
         "@grpc-java//stub",
-        "@maven//:info_picocli_picocli",
-        "@maven//:io_grpc_grpc_api",
-        "@maven//:org_jetbrains_annotations",
         "@remoteapis//build/bazel/remote/execution/v2:remote_execution_java_proto",
         "@remoteapis//build/bazel/semver:semver_java_proto",
     ],  # keep

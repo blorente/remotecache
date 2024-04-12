@@ -1,7 +1,1 @@
 build --java_language_version=17 --java_runtime_version=17
-
-common:testcache --remote_cache=grpc://localhost:50051
-common:testcache --remote_cache_header=HELLO=world
-common:testcache --repository_cache=/tmp/repo_cache
-common:testcache --disk_cache=/tmp/disk_cache
-common:testcache --remote_grpc_log=__bl/grpc.log
