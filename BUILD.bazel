@@ -21,20 +21,9 @@ buildifier(
     exclude_patterns = [
         "./.git/*",
     ],
-    lint_mode = "warn",
 )
 
-## Adapted from https://github.com/bazelbuild/tools_remote/blob/8ac4b7595baa239e1eee4785547c5dcb7587e11c/BUILD#L1
-## We can't use that binary because `tools_remote` doesn't play well with bzlmod.
-#java_binary(
-#    name = "remote_client",
-#    main_class = "com.google.devtools.build.remote.client.RemoteClient",
-#    deps = [
-#        "@tools_remote//src/main/java/com/google/devtools/build/remote/client",
-#    ],
-#)
-#
-# @remoteapis doesn't generate the gRPC stubs by default, so we force-generate them here.
+# @remoteapis doesn't generate the Java gRPC stubs by default, so we wrap them here.
 java_grpc_library(
     name = "build_bazel_remote_execution_v2_remote_execution_java_grpc",
     srcs = ["@remoteapis//build/bazel/remote/execution/v2:remote_execution_proto"],

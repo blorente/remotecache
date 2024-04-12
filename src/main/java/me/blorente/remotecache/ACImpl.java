@@ -22,10 +22,9 @@ public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
   @Override
   public void getActionResult(
       GetActionResultRequest request, StreamObserver<ActionResult> responseObserver) {
-//    logger.info(String.format("BL: I got getActionResult request %s", request));
     Digest digest = request.getActionDigest();
-    if (storage.ac().containsKey(digest)) {
-      ActionResult res = storage.ac().get(digest);
+    if (storage.hasAction(digest)) {
+      ActionResult res = storage.getAction(digest);
       logger.info(String.format("BL: Action found %s", digest));
       responseObserver.onNext(res);
       responseObserver.onCompleted();
@@ -45,7 +44,7 @@ public class ACImpl extends ActionCacheGrpc.ActionCacheImplBase {
     logger.info(String.format("BL: I got getActionResult request %s", request));
     Digest digest = request.getActionDigest();
     ActionResult result = request.getActionResult();
-    storage.ac().put(digest, result);
+    storage.writeAction(digest, result);
     responseObserver.onNext(result);
     responseObserver.onCompleted();
   }

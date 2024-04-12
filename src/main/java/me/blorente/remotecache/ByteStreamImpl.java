@@ -8,17 +8,10 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
-  private record DigestParseResult(@Nullable Digest digest, @Nullable String error) {
-    public boolean isError() {
-      return this.error != null;
-    }
-  }
-
   private static final Logger logger = Logger.getLogger(ByteStreamImpl.class.getName());
 
   private final CacheStorage storage;
@@ -31,7 +24,6 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
   public void read(
       ByteStreamProto.ReadRequest request,
       StreamObserver<ByteStreamProto.ReadResponse> responseObserver) {
-    logger.info(String.format("BL: I got ByteStream.read request %s", request));
     String resourceName = request.getResourceName();
     DigestParseResult parseResult = parseDigestFromResourceName(resourceName);
     if (parseResult.isError()) {
@@ -40,8 +32,8 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
       return;
     }
     Digest digest = parseResult.digest();
-    if (storage.cas().containsKey(digest)) {
-      ByteString data = storage.cas().get(digest);
+    if (storage.hasBlob(digest)) {
+      ByteString data = storage.getBlob(digest);
       responseObserver.onNext(ByteStreamProto.ReadResponse.newBuilder().setData(data).build());
       responseObserver.onCompleted();
     } else {
@@ -92,7 +84,7 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
 
         boolean finish = request.getFinishWrite();
         if (finish) {
-          storage.cas().put(currentDigest, currentData);
+          storage.writeBlob(currentDigest, currentData);
           responseObserver.onNext(
                   ByteStreamProto.WriteResponse.newBuilder()
                           .setCommittedSize(currentData.size())
@@ -104,7 +96,7 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
 
       @Override
       public void onError(Throwable t) {
-        logger.log(Level.SEVERE, "BL: There was an error while writing", t);
+        logger.log(Level.SEVERE, "There was an error while writing blob", t);
       }
 
       @Override
@@ -118,7 +110,6 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
   public void queryWriteStatus(
       ByteStreamProto.QueryWriteStatusRequest request,
       StreamObserver<ByteStreamProto.QueryWriteStatusResponse> responseObserver) {
-    logger.info(String.format("BL: I got ByteStream.queryWriteStatus request %s", request));
 
     DigestParseResult parseResult = parseDigestFromResourceName(request.getResourceName());
     if (parseResult.isError()) {
@@ -128,7 +119,7 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
     }
     Digest requestedDigest = parseResult.digest();
 
-    if (storage.cas().containsKey(requestedDigest)) {
+    if (storage.hasBlob(requestedDigest)) {
       responseObserver.onNext(
           ByteStreamProto.QueryWriteStatusResponse.newBuilder().setComplete(true).build());
     } else {
@@ -136,6 +127,12 @@ public class ByteStreamImpl extends ByteStreamGrpc.ByteStreamImplBase {
           ByteStreamProto.QueryWriteStatusResponse.newBuilder().setComplete(false).build());
     }
     responseObserver.onCompleted();
+  }
+
+  private record DigestParseResult(@Nullable Digest digest, @Nullable String error) {
+    public boolean isError() {
+      return this.error != null;
+    }
   }
 
   private DigestParseResult parseDigestFromResourceName(String resourceName) {

@@ -1,23 +1,26 @@
 package me.blorente.remotecache;
 
 import io.grpc.*;
+import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-
-public class RemoteCache {
+@CommandLine.Command(name = "bl-remote-cache", description = "Remote gRPC server implementing the remote cache from bazelbuild/remote-apis")
+public class RemoteCache implements Callable<Integer> {
     private static final Logger logger = Logger.getLogger(RemoteCache.class.getName());
+
+    @CommandLine.Option(names = {"-p", "--port"}, description = "Port to serve traffic on")
+    private int port = 5001;
 
     private Server server;
 
     private void start() throws IOException {
-      int port = 50051;
       CacheStorage storage = new CacheStorage();
     server =
-        ServerBuilder.forPort(port)
-            .intercept(new GrpcRequestPrinter())
+        ServerBuilder.forPort(this.port)
             .addService(new CASImpl(storage))
             .addService(new ACImpl(storage))
             .addService(new ByteStreamImpl(storage))
@@ -53,19 +56,15 @@ public class RemoteCache {
       }
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        final RemoteCache server = new RemoteCache();
-        server.start();
-        server.blockUntilShutdown();
+    @Override
+    public Integer call() throws Exception {
+        this.start();
+        this.blockUntilShutdown();
+        return 0;
     }
 
-    private class GrpcRequestPrinter implements ServerInterceptor {
-        private static final Logger logger = Logger.getLogger(GrpcRequestPrinter.class.getName());
-
-        @Override
-        public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-//            logger.info(String.format("BL: grpc call method=%s headers=%s", call.getMethodDescriptor().getFullMethodName(), headers));
-            return next.startCall(call, headers);
-        }
+    public static void main(String[] args) throws IOException, InterruptedException {
+        int exitCode = new CommandLine(new RemoteCache()).execute(args);
+        System.exit(exitCode);
     }
 }

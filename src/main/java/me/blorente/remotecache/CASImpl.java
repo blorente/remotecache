@@ -30,7 +30,7 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
     List<Digest> digests = request.getBlobDigestsList();
     FindMissingBlobsResponse.Builder response = FindMissingBlobsResponse.newBuilder();
     for (Digest digest : digests) {
-      if (!storage.cas().containsKey(digest)) {
+      if (!storage.hasBlob(digest)) {
         response.addMissingBlobDigests(digest);
       }
     }
@@ -47,7 +47,7 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
     for (BatchUpdateBlobsRequest.Request req : updateRequests) {
       Digest digest = req.getDigest();
       ByteString data = req.getData();
-      storage.cas().put(digest, data);
+      storage.writeBlob(digest, data);
     }
     responseObserver.onCompleted();
   }
@@ -58,7 +58,7 @@ public class CASImpl extends ContentAddressableStorageGrpc.ContentAddressableSto
     logger.info(String.format("BL: I got batchReadBlobs request %s", request));
     BatchReadBlobsResponse.Builder responseBuilder = BatchReadBlobsResponse.newBuilder();
     for (Digest digest : request.getDigestsList()) {
-      ByteString data = storage.cas().get(digest);
+      ByteString data = storage.getBlob(digest);
       BatchReadBlobsResponse.Response resp =
           BatchReadBlobsResponse.Response.newBuilder().setDigest(digest).setData(data).build();
       responseBuilder.addResponses(resp);
